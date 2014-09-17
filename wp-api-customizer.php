@@ -16,47 +16,75 @@ define( 'WP_API_CUSTOMIZER_PATH', dirname( __FILE__ ) );
 
 class WP_API_Customizer {
 
-	private $ver   = '';
-	private $langs = '';
-
-	public $domain = 'wp-api-customizer';
+	private $version   = '';
+	private $languages = '';
+	private $domain    = '';
+	private $options   = '';
 
 	public function __construct() {
-		$data = get_file_data( __FILE__, array( 'ver' => 'Version', 'langs' => 'Domain Path' ) );
-		$this->ver   = $data['ver'];
-		$this->langs = $data['langs'];
+		$data = get_file_data( __FILE__, array( 'version' => 'Version', 'languages' => 'Domain Path', 'domain' => 'Text Domain' ) );
+		$this->version   = $data['version'];
+		$this->languages = $data['languages'];
+		$this->domain    = $data['domain'];
+		$this->options   = $this->domain . '-options';
 
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
-
-		// add_filter( 'json_prepare_post', array( $this, 'customizer' ), 10, 3);
 	}
 
 	public function plugins_loaded() {
-		load_plugin_textdomain( $domain, false, dirname( plugin_basename( __FILE__ ) ) . $this->langs );
+		$options = get_option( $this->options );
+
+		load_plugin_textdomain( $this->domain, false, dirname( plugin_basename( __FILE__ ) ) . $this->languages );
+
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
+
+		var_dump(get_option( $this->options ));
+		add_filter( 'json_prepare_post', array( $this, 'json_prepare_post' ), 10, 3);
+	}
+
+	public function admin_enqueue_scripts() {
+		if ( isset( $_GET['page'] ) && $_GET['page'] === $this->domain ) {
+			wp_enqueue_style(
+				'admin-' . $this->domain . '-style',
+				plugins_url( 'css/admin-' . $this->domain . '.min.css', __FILE__ ),
+				array(),
+				$this->version,
+				'all'
+			);
+
+			wp_enqueue_script(
+				'admin-' . $this->domain . '-script',
+				plugins_url( 'js/admin-' . $this->domain . '.min.js', __FILE__ ),
+				array( 'jquery' ),
+				$this->version,
+				true
+			);
+		}
 	}
 
 	public function admin_menu() {
-		add_options_page(
+		add_menu_page(
 			__( 'WP API Customizer' ),
 			__( 'WP API Customizer' ),
 			'manage_options',
-			'wp-api-customizer',
-			array( $this, 'options_page' )
+			$this->domain,
+			array( $this, 'options_page' ),
+			'dashicons-admin-generic'
 		);
 	}
 
 	public function admin_init() {
 		if ( isset( $_POST['_wpnonce'] ) && $_POST['_wpnonce'] ) {
-			// save something
-			if ( isset( $_POST['wp-api-customizer-options'] ) ) {
-				check_admin_referer('wp-api-customizer-options');
-				$options = $_POST['wp-api-customizer-options'];
-				update_option('wp-api-customizer-options', $options);
-				?><div class="updated fade"><p><strong><?php _e('Options saved.'); ?></strong></p></div><?php
+			if ( isset( $_POST[ $this->options ] ) ) {
+				check_admin_referer( $this->options );
+				$options = $_POST[ $this->options ];
+				update_option( $this->options, $options );
+			} else {
+				update_option( $this->options, '' );
 			}
-			wp_safe_redirect( 'options-general.php?page=wp-api-customizer' );
+			wp_safe_redirect( menu_page_url( $this->domain, false ) );
 		}
 	}
 
@@ -64,30 +92,66 @@ class WP_API_Customizer {
 		?>
 		<div class="wrap">
 		<div id="icon-options-general" class="icon32"><br /></div>
-			<h2><?php _e( 'WP API Customizer' ); ?></h2>
+			<h2 style="margin-bottom: 15px;"><?php _e( 'WP API Customizer' ); ?></h2>
 			<form action="" method="post">
 				<?php
-				wp_nonce_field( 'wp-api-customizer-options' );
-				$options = get_option( 'wp-api-customizer-options' );
-				$custom_field_name = isset( $options['custom-field-name'] ) ? $options['custom-field-name'] : null;
+					wp_nonce_field( $this->options );
+					$options = get_option( $this->options );
 				?>
-				<table class="form-table">
-					<tr valign="top">
-						<th scope="row"><label for="inputtext"><?php _e( 'Custom Field Name' ); ?></label></th>
-						<td><input name="wp-api-customizer-options[custom-field-name]" type="text" id="inputtext" value="<?php echo $custom_field_name; ?>" class="regular-text" /></td>
-					</tr>
+				<table class="wp-list-table widefat fixed" id="<?php echo esc_attr( $this->options ); ?>">
+					<thead>
+						<tr>
+							<th class="column-cb check-column" id="cb" scope="col"></th>
+							<th scope="col"><?php _e( 'JSON Attribute' ); ?></th>
+							<th scope="col"><?php _e( 'Custom Field Name' ); ?></th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr>
+							<th class="column-cb check-column" scope="col"><a href="#" class="dashicons-before dashicons-plus add-option"></a></th>
+							<th scope="col"><?php _e( 'JSON Attribute' ); ?></th>
+							<th scope="col"><?php _e( 'Custom Field Name' ); ?></th>
+						</tr>
+					</tfoot>
+					<tbody id="the-list">
+						<?php if ( isset( $options ) && is_array( $options ) ) : ?>
+							<?php foreach ( $options as $key => $option ) : ?>
+								<tr>
+									<th class="check-column" scope="row">
+										<a href="#" class="dashicons-before dashicons-minus remove-option"></a>
+									</th>
+									<td>
+										<input type="text" placeholder="" value="<?php echo esc_attr( $option['json-attribute'] ); ?>" name="<?php echo esc_attr( "$this->options[$key][json-attribute]" ); ?>" class="text" id="<?php echo esc_attr( "{$this->options}_{$key}_json-attribute" ); ?>" />
+									</td>
+									<td>
+										<input type="text" placeholder="" value="<?php echo esc_attr( $option['custom-field-name'] ); ?>" name="<?php echo esc_attr( "$this->options[$key][custom-field-name]" ); ?>" class="text" id="<?php echo esc_attr( "{$this->options}_{$key}_custom-field-name" ); ?>" />
+									</td>
+								</tr>
+							<?php endforeach; ?>
+						<?php endif; ?>
+					</tbody>
 				</table>
-				<p class="submit"><input type="submit" name="Submit" class="button-primary" value="<?php _e( 'Save Changes' ); ?>" /></p>
+				<p class="submit">
+					<input type="submit" name="Submit" class="button-primary" value="<?php _e( 'Save Changes' ); ?>" />
+				</p>
 			</form>
 		</div><!-- /.wrap -->
 		<?php
 	}
 
-	public function customizer( $data, $post, $context ) {
-		$data['post_meta'] = array(
-			'a' => get_post_meta( $post['ID'], 'public_post_meta_a', true ),
-			'b' => get_post_meta( $post['ID'], 'public_post_meta_b', true )
-		);
+	public function json_prepare_post( $data, $post, $context ) {
+
+		$options = get_option( $this->options );
+
+		if ( isset( $options ) && is_array( $options ) ) {
+			foreach ( $options as $key => $option ) {
+				$attribute         = $option['json-attribute'];
+				$custom_field_name = $option['custom-field-name'];
+				$data['post_meta'][ $attribute ] = get_post_meta( $post['ID'], $custom_field_name, true );
+			}
+
+		}
+
 		return $data;
 	}
 

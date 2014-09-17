@@ -1,0 +1,14 @@
+/*
+Plugin Name: WP API Customizer
+Plugin URI:  https://github.com/ixkaito/wp-api-customizer
+Author:      KITE
+Author URI:  http://kiteretz.com
+Version:     0.0.1
+Description:
+Text Domain: wp-api-customizer
+Domain Path: /languages
+License:     GPLv2
+*/
+#the-list tr:nth-child(odd) {
+	background-color: #f9f9f9;
+}
