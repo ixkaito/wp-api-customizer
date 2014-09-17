@@ -40,7 +40,6 @@ class WP_API_Customizer {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 
-		var_dump(get_option( $this->options ));
 		add_filter( 'json_prepare_post', array( $this, 'json_prepare_post' ), 10, 3);
 	}
 
