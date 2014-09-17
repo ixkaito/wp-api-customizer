@@ -1,6 +1,6 @@
 === WP API Customizer ===
 Contributors: ixkaito
-Tags: api, json, custom field, rest
+Tags: api, json, custom field, rest api, rest
 Requires: JSON REST API (WP API)
 Requires at least: 4.0
 Tested up to: 4.0
