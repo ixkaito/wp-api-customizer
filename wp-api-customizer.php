@@ -50,12 +50,37 @@ class WP_API_Customizer {
 	public function admin_init() {
 		if ( isset( $_POST['_wpnonce'] ) && $_POST['_wpnonce'] ) {
 			// save something
+			if ( isset( $_POST['wp-api-customizer-options'] ) ) {
+				check_admin_referer('wp-api-customizer-options');
+				$options = $_POST['wp-api-customizer-options'];
+				update_option('wp-api-customizer-options', $options);
+				?><div class="updated fade"><p><strong><?php _e('Options saved.'); ?></strong></p></div><?php
+			}
 			wp_safe_redirect( 'options-general.php?page=wp-api-customizer' );
 		}
 	}
 
 	public function options_page() {
-		// form
+		?>
+		<div class="wrap">
+		<div id="icon-options-general" class="icon32"><br /></div>
+			<h2><?php _e( 'WP API Customizer' ); ?></h2>
+			<form action="" method="post">
+				<?php
+				wp_nonce_field( 'wp-api-customizer-options' );
+				$options = get_option( 'wp-api-customizer-options' );
+				$custom_field_name = isset( $options['custom-field-name'] ) ? $options['custom-field-name'] : null;
+				?>
+				<table class="form-table">
+					<tr valign="top">
+						<th scope="row"><label for="inputtext"><?php _e( 'Custom Field Name' ); ?></label></th>
+						<td><input name="wp-api-customizer-options[custom-field-name]" type="text" id="inputtext" value="<?php echo $custom_field_name; ?>" class="regular-text" /></td>
+					</tr>
+				</table>
+				<p class="submit"><input type="submit" name="Submit" class="button-primary" value="<?php _e( 'Save Changes' ); ?>" /></p>
+			</form>
+		</div><!-- /.wrap -->
+		<?php
 	}
 
 	public function customizer( $data, $post, $context ) {
