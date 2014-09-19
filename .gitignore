@@ -1,0 +1,27 @@
+# Ignore sublime setting files.
+sftp-config.json
+*.sublime-project
+*.sublime-workspace
+
+# Ignore WordPress config files.
+wp-config.php
+
+# Ignore htaccess & htpasswd
+.htaccess
+.htpasswd
+
+# Ignore all logfiles and tempfiles.
+/log/*.log
+/tmp
+
+# Ignore other unneeded files.
+doc/
+*.swp
+*~
+.project
+.DS_Store
+.idea
+.secret
+
+# Ignore Sass cache files.
+*.scssc

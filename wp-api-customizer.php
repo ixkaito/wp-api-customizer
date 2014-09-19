@@ -47,7 +47,7 @@ class WP_API_Customizer {
 		if ( isset( $_GET['page'] ) && $_GET['page'] === $this->domain ) {
 			wp_enqueue_style(
 				'admin-' . $this->domain . '-style',
-				plugins_url( 'css/admin-' . $this->domain . '.min.css', __FILE__ ),
+				plugins_url( 'css/admin-' . $this->domain . '.css', __FILE__ ),
 				array(),
 				$this->version,
 				'all'
@@ -100,14 +100,14 @@ class WP_API_Customizer {
 				<table class="wp-list-table widefat fixed" id="<?php echo esc_attr( $this->options ); ?>">
 					<thead>
 						<tr>
-							<th class="column-cb check-column" id="cb" scope="col"></th>
+							<th class="column-remove" id="cb" scope="col"></th>
 							<th scope="col"><?php _e( 'JSON Attribute' ); ?></th>
 							<th scope="col"><?php _e( 'Custom Field Name' ); ?></th>
 						</tr>
 					</thead>
 					<tfoot>
 						<tr>
-							<th class="column-cb check-column" scope="col"><a href="#" class="dashicons-before dashicons-plus add-option"></a></th>
+							<th class="column-add" scope="col"><a href="#" class="dashicons-before dashicons-plus add-option"></a></th>
 							<th scope="col"><?php _e( 'JSON Attribute' ); ?></th>
 							<th scope="col"><?php _e( 'Custom Field Name' ); ?></th>
 						</tr>
@@ -116,7 +116,7 @@ class WP_API_Customizer {
 						<?php if ( isset( $options ) && is_array( $options ) ) : ?>
 							<?php foreach ( $options as $key => $option ) : ?>
 								<tr>
-									<th class="check-column" scope="row">
+									<th class="column-remove" scope="row">
 										<a href="#" class="dashicons-before dashicons-minus remove-option"></a>
 									</th>
 									<td>

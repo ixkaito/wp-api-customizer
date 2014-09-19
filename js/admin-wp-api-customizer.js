@@ -32,7 +32,7 @@ License:     GPLv2
 	function add(){
 		var key = $tbody.children().length;
 		var tr  = '<tr>\
-			<th scope="row" class="check-column">\
+			<th scope="row" class="column-remove">\
 				<a class="dashicons-before dashicons-minus remove-option" href="#"></a>\
 			</th>\
 			<td>\

@@ -1,0 +1,34 @@
+@charset "UTF-8";
+@import "compass";
+
+#the-list {
+
+	tr:nth-child(odd) {
+		background-color: #f9f9f9;
+	}
+
+	td {
+
+		input {
+			width: 100%;
+		}
+	}
+}
+
+.column-remove,
+.column-add {
+	width: 1.5em;
+	padding: 0 5px;
+	text-align: center;
+	vertical-align: middle;
+
+	> .dashicons-before {
+		@include border-radius(14px);
+		@include box-shadow( 0 1px 1px rgba( 0, 0, 0, 0.04 ) );
+		border: 1px solid #e5e5e5;
+
+		&:before {
+			vertical-align: middle;
+		}
+	}
+}
