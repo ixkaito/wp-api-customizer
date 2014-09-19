@@ -5,7 +5,7 @@ Plugin URI:  https://github.com/ixkaito/wp-api-customizer
 Author:      KITE
 Author URI:  http://kiteretz.com
 Version:     0.0.1
-Description:
+Description: Make post meta data (custom field values) available for JSON REST API (WP API) when unauthenticated.
 Text Domain: wp-api-customizer
 Domain Path: /languages
 License:     GPLv2
