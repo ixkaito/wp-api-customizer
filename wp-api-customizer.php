@@ -27,6 +27,7 @@ class WP_API_Customizer {
 		$this->languages = $data['languages'];
 		$this->domain    = $data['domain'];
 		$this->options   = $this->domain . '-options';
+		$this->nonce     = $this->domain . '-nonce';
 
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
 	}
@@ -75,15 +76,16 @@ class WP_API_Customizer {
 	}
 
 	public function admin_init() {
-		if ( isset( $_POST['_wpnonce'] ) && $_POST['_wpnonce'] ) {
-			if ( isset( $_POST[ $this->options ] ) ) {
-				check_admin_referer( $this->options );
-				$options = $_POST[ $this->options ];
-				update_option( $this->options, $options );
-			} else {
-				update_option( $this->options, '' );
+		if ( isset( $_POST[ $this->nonce ] ) && $_POST[ $this->nonce ] ) {
+			if ( check_admin_referer( $this->options, $this->nonce ) ) {
+				if ( isset( $_POST[ $this->options ] ) ) {
+					$options = $_POST[ $this->options ];
+					update_option( $this->options, $options );
+				} else {
+					update_option( $this->options, '' );
+				}
+				wp_safe_redirect( menu_page_url( $this->domain, false ) );
 			}
-			wp_safe_redirect( menu_page_url( $this->domain, false ) );
 		}
 	}
 
@@ -94,7 +96,7 @@ class WP_API_Customizer {
 			<h2 style="margin-bottom: 15px;"><?php _e( 'WP API Customizer', $this->domain ); ?></h2>
 			<form action="" method="post">
 				<?php
-					wp_nonce_field( $this->options );
+					wp_nonce_field( $this->options, $this->nonce );
 					$options = get_option( $this->options );
 				?>
 				<table class="wp-list-table widefat fixed" id="<?php echo esc_attr( $this->options ); ?>">
