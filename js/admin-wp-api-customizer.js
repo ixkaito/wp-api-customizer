@@ -3,7 +3,7 @@ Plugin Name: WP API Customizer
 Plugin URI:  https://github.com/ixkaito/wp-api-customizer
 Author:      KITE
 Author URI:  http://kiteretz.com
-Version:     0.0.1
+Version:     0.0.2
 Description:
 Text Domain: wp-api-customizer
 Domain Path: /languages

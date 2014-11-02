@@ -4,7 +4,7 @@ Tags: api, json, custom field, rest api, rest
 Requires: JSON REST API (WP API)
 Requires at least: 4.0
 Tested up to: 4.0
-Version: 0.0.1
+Version: 0.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,11 @@ The JSON REST API will provide the data as "post_meta" like the following:
 4. Set JSON attributes and custom field names.
 
 == Changelog ==
+
+= 0.0.2 =
+* Fix a bug that WP API Customizer options are deleted unexpectedly
+* Solve conflicts with some plugins
+* Delete the data in the database when uninstalling WP API Customizer
 
 = 0.0.1 =
 * Initial Release.
