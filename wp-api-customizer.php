@@ -65,8 +65,8 @@ class WP_API_Customizer {
 
 	public function admin_menu() {
 		add_menu_page(
-			__( 'WP API Customizer' ),
-			__( 'WP API Customizer' ),
+			__( 'WP API Customizer', $this->domain ),
+			__( 'WP API Customizer', $this->domain ),
 			'manage_options',
 			$this->domain,
 			array( $this, 'options_page' ),
@@ -91,7 +91,7 @@ class WP_API_Customizer {
 		?>
 		<div class="wrap">
 		<div id="icon-options-general" class="icon32"><br /></div>
-			<h2 style="margin-bottom: 15px;"><?php _e( 'WP API Customizer' ); ?></h2>
+			<h2 style="margin-bottom: 15px;"><?php _e( 'WP API Customizer', $this->domain ); ?></h2>
 			<form action="" method="post">
 				<?php
 					wp_nonce_field( $this->options );
@@ -101,15 +101,15 @@ class WP_API_Customizer {
 					<thead>
 						<tr>
 							<th class="column-remove" id="cb" scope="col"></th>
-							<th scope="col"><?php _e( 'JSON Attribute' ); ?></th>
-							<th scope="col"><?php _e( 'Custom Field Name' ); ?></th>
+							<th scope="col"><?php _e( 'JSON Attribute', $this->domain ); ?></th>
+							<th scope="col"><?php _e( 'Custom Field Name', $this->domain ); ?></th>
 						</tr>
 					</thead>
 					<tfoot>
 						<tr>
 							<th class="column-add" scope="col"><a href="#" class="dashicons-before dashicons-plus add-option"></a></th>
-							<th scope="col"><?php _e( 'JSON Attribute' ); ?></th>
-							<th scope="col"><?php _e( 'Custom Field Name' ); ?></th>
+							<th scope="col"><?php _e( 'JSON Attribute', $this->domain ); ?></th>
+							<th scope="col"><?php _e( 'Custom Field Name', $this->domain ); ?></th>
 						</tr>
 					</tfoot>
 					<tbody id="the-list">
