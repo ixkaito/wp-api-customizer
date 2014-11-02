@@ -7,4 +7,4 @@ function wp_api_customizer_uninstall() {
 	delete_option( $wp_api_customizer->options );
 }
 
-wp_api_customizer_unistall();
+wp_api_customizer_uninstall();
