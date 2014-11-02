@@ -16,10 +16,10 @@ define( 'WP_API_CUSTOMIZER_PATH', dirname( __FILE__ ) );
 
 class WP_API_Customizer {
 
-	private $version   = '';
-	private $languages = '';
-	private $domain    = '';
-	private $options   = '';
+	public $version   = '';
+	public $languages = '';
+	public $domain    = '';
+	public $options   = '';
 
 	public function __construct() {
 		$data = get_file_data( __FILE__, array( 'version' => 'Version', 'languages' => 'Domain Path', 'domain' => 'Text Domain' ) );
@@ -156,4 +156,4 @@ class WP_API_Customizer {
 
 }
 
-new WP_API_Customizer();
+$wp_api_customizer = new WP_API_Customizer();
